@@ -11,8 +11,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs'; 
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
+
 
 export default function DessertEntryForm() {
   const history = useHistory();
@@ -21,6 +20,8 @@ export default function DessertEntryForm() {
     date: null,
     from: '',
     to: '',
+    toWhom: '',
+    vehicleType: '',
     consigner: '',
     consignee: '',
     basicFreight: 0,
@@ -33,13 +34,29 @@ export default function DessertEntryForm() {
     totalLorryHire: 0,
     truckNumber: '',
     invoice: false,
-    toWhom: ''
+   
   });
 
-  
 
   const handleChange = (field) => (event, value) => {
-    setGcData({ ...gcData, [field]: event?.target ? event.target.value : value });
+    console.log("field selected:  ", field)
+   
+    if (
+      field === "from" ||
+      field === "to" ||
+      field === "consigner" ||
+      field === "consignee" ||
+      field === "toWhom" ||
+      field === "vehicleType"
+    ){
+      console.log("value selected:  ", value)
+      setGcData({ ...gcData, [field]:  value });
+    }else{
+      console.log("hereeee")
+      console.log("value selected:  ", event.target.value)
+    setGcData({ ...gcData, [field]:  event.target.value });
+    }
+    console.log("gc data:  ", gcData)
   };
 
 
@@ -63,6 +80,8 @@ export default function DessertEntryForm() {
   };
 
   const calorieOptions = ["small", "medium","large","Blue sky, fluffy clouds, and a gentle breeze make my day."]; // Replace with your calorie options
+
+  const toWhomList = ['consigner', 'consignee'];
 
   return (
     <Grid container>
@@ -112,43 +131,6 @@ export default function DessertEntryForm() {
             id="outlined-consigner"
             options={calorieOptions}
             renderInput={(params) => (
-              <TextField {...params} label="From" variant="outlined" />
-            )}
-            value={gcData.from}
-            onChange={(event, value) => handleChange('from')(event, value)}
-            isOptionEqualToValue={(option, value) => option === value}
-            renderOption={(props, option) => (
-              <MenuItem {...props} value={option} sx={{
-                width: '350px',
-                p: 1}}>
-                {option}
-              </MenuItem>
-            )}
-          />
-          </Grid>
-          <Grid item xs={4}>
-          <Autocomplete
-            id="outlined-consignee"
-            options={calorieOptions}
-            renderInput={(params) => (
-              <TextField {...params} label="To" variant="outlined" />
-            )}
-            value={gcData.to}
-            onChange={(event, value) => handleChange('to')(event, value)}
-            isOptionEqualToValue={(option, value) => option === value}
-            renderOption={(props, option) => (
-              <MenuItem {...props} value={option}>
-                {option}
-              </MenuItem>
-            )}
-          />
-          </Grid>
-          <Grid item xs={4}></Grid>
-        <Grid item xs={4}>
-          <Autocomplete
-            id="outlined-consigner"
-            options={calorieOptions}
-            renderInput={(params) => (
               <TextField {...params} label="Consigner" variant="outlined" />
             )}
             value={gcData.consigner}
@@ -181,9 +163,9 @@ export default function DessertEntryForm() {
           <Grid item xs={4}>
           <Autocomplete
             id="outlined-consignee"
-            options={calorieOptions}
+            options={toWhomList}
             renderInput={(params) => (
-              <TextField {...params} label="To Whom" variant="outlined" />
+              <TextField {...params} label="To Whom to bill" variant="outlined" />
             )}
             value={gcData.toWhom}
             onChange={(event, value) => handleChange('toWhom')(event, value)}
@@ -195,15 +177,65 @@ export default function DessertEntryForm() {
             )}
           />
           </Grid>
+          <Grid item xs={4}>
+          <Autocomplete
+            id="outlined-consigner"
+            options={calorieOptions}
+            renderInput={(params) => (
+              <TextField {...params} label="From" variant="outlined" />
+            )}
+            value={gcData.from}
+            onChange={(event, value) => handleChange('from')(event, value)}
+            isOptionEqualToValue={(option, value) => option === value}
+            renderOption={(props, option) => (
+              <MenuItem {...props} value={option} sx={{
+                width: '350px',
+                p: 1}}>
+                {option}
+              </MenuItem>
+            )}
+          />
+          </Grid>
+          <Grid item xs={4}>
+          <Autocomplete
+            id="outlined-consignee"
+            options={calorieOptions}
+            renderInput={(params) => (
+              <TextField {...params} label="To" variant="outlined" />
+            )}
+            value={gcData.to}
+            onChange={(event, value) => handleChange('to')(event, value)}
+            isOptionEqualToValue={(option, value) => option === value}
+            renderOption={(props, option) => (
+              <MenuItem {...props} value={option}>
+                {option}
+              </MenuItem>
+            )}
+          />
+          </Grid>
+          <Grid item xs={4}>
+          <Autocomplete
+            id="outlined-vehicleType"
+            options={calorieOptions}
+            renderInput={(params) => (
+              <TextField {...params} label="Vehicle Type" variant="outlined" />
+            )}
+            value={gcData.vehicleType}
+            onChange={(event, value) => handleChange('vehicleType')(event, value)}
+            isOptionEqualToValue={(option, value) => option === value}
+            renderOption={(props, option) => (
+              <MenuItem {...props} value={option}>
+                {option}
+              </MenuItem>
+            )}
+          />
+          </Grid>
+        
           <Grid item xs={2}>
           <TextField
-            required
-            id="outlined-basic-freight"
+            disabled
+            id="outlined-basicFreight"
             label="Basic Freight"
-            type="number"
-            InputLabelProps={{
-              shrink: true,
-            }}
             value={gcData.basicFreight}
             onChange={handleChange('basicFreight')}
           />
@@ -211,7 +243,7 @@ export default function DessertEntryForm() {
           <Grid item xs={2}>
           <TextField
             required
-            id="outlined-others"
+            id="outlined-basic"
             label="Others"
             type="number"
             InputLabelProps={{
@@ -223,13 +255,8 @@ export default function DessertEntryForm() {
           </Grid>
           <Grid item xs={2}>
           <TextField
-            required
+            disabled
             id="outlined-docketCharge"
-            type="number"
-            
-            InputLabelProps={{
-              shrink: true,
-            }}
             label="Docket Charge"
             value={gcData.docketCharge}
             onChange={handleChange('docketCharge')}
@@ -262,7 +289,7 @@ export default function DessertEntryForm() {
           <TextField
             disabled
             id="outlined-total"
-            label="Total"
+            label="Total Freight"
             value={gcData.total}
             onChange={handleChange('total')}
           />
@@ -299,21 +326,36 @@ export default function DessertEntryForm() {
             onChange={handleChange('truckNumber')}
           />
           </Grid>
+          {/* advance and balance for freight and lorry hire, add delivery date and receipt reference number */}
           <Grid item xs={10}>
-          <InputLabel id="demo-simple-select-standard-label">Invoice</InputLabel>
-        <Select
-          labelId="demo-simple-select-standard-label"
-          id="demo-simple-select-standard"
-          value={gcData.invoice}
-          onChange={handleChange}
-          label="Age"
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={true}>Yes</MenuItem>
-          <MenuItem value={false}>No</MenuItem>
-        </Select>
+          <TextField
+            required
+            id="outlined-truckNumber"
+            label="Advance Freight"
+            value={gcData.truckNumber}
+            onChange={handleChange('truckNumber')}
+          />
+          <TextField
+            required
+            id="outlined-truckNumber"
+            label="Truck Number"
+            value={gcData.truckNumber}
+            onChange={handleChange('truckNumber')}
+          />
+          <TextField
+            required
+            id="outlined-truckNumber"
+            label="Truck Number"
+            value={gcData.truckNumber}
+            onChange={handleChange('truckNumber')}
+          />
+          <TextField
+            required
+            id="outlined-truckNumber"
+            label="Truck Number"
+            value={gcData.truckNumber}
+            onChange={handleChange('truckNumber')}
+          />
         </Grid>
         <Grid item xs={10}></Grid>
            </Grid>

@@ -232,7 +232,7 @@ const MainLayout = ({ themeConfig, navigationData, children }) => {
           <Typography variant='h6' noWrap className={classes.appBarTitle}>
             <strong>Aadhitiya Parcel Service</strong>
           </Typography>
-          <Switch
+          {/* <Switch
             checked={themeConfig.state}
             onChange={themeConfig.handler}
             name='themeSwitch'
@@ -246,7 +246,7 @@ const MainLayout = ({ themeConfig, navigationData, children }) => {
               )
             }>
             <GitHub />
-          </IconButton>
+          </IconButton> */}
         </Toolbar>
       </AppBar>
       <Hidden smUp implementation='css'>
