@@ -32,13 +32,19 @@ generatePDFInvoice(row)
 const generatePDFInvoice = (rowData) => {
   const doc = new jsPDF();
 
-  const img_path = '/Users/Z0044H2/Documents/APS/APMS/ui-new/screenshots/folder-structure.png';
 
+  const imagePath = '/Users/Z0044H2/Documents/UI/GangaPhotography/assets/img/trucking-service.jpg';
 
-  // Add company logo (replace 'logo.png' with the path to your company logo)
-  doc.addImage(img_path, 'JPEG', 20, 10, 40, 40);
+  // Add image directly to the PDF
+  doc.addImage(imagePath, 'JPEG', 20, 10, 40, 40);
+
+  doc.setTextColor(200, 200, 200);
+  doc.setFontSize(30);
+  doc.textWithLink('Aadhithiya Parcel ', 50, 60, { url: "https://www.google.com/imgres?imgurl=https%3A%2F%2Fplay-lh.googleusercontent.com%2F-91f5NAgH-j_dooXWtPC6G5i0th2-9YPbtpVbZp1Vvsq4zgiqIIcG7VJmm5hyIoPdg_1&tbnid=E0NWeZWOpfl0TM&vet=12ahUKEwij78-a7eiDAxVkpmMGHT4kAmIQMygBegQIARB1..i&imgrefurl=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.bravuratech.APSMeetings%26hl%3Den_US&docid=_XSygsOp8Sx8cM&w=512&h=512&q=aps&ved=2ahUKEwij78-a7eiDAxVkpmMGHT4kAmIQMygBegQIARB1" });
+
 
   // Add company details
+  doc.setTextColor(0, 0, 0);
   doc.setFontSize(12);
   doc.text('Aadhithiya Parcel Service', 70, 20);
   doc.text('Company Address', 70, 30);
@@ -58,35 +64,6 @@ const generatePDFInvoice = (rowData) => {
     ['Item 1', 'Description 1', '10', '100'],
     ['Item 2', 'Description 2', '5', '50'],
     ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
     // Add more rows as needed
   ];
 
