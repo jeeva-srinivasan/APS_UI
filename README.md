@@ -1,3 +1,7 @@
-# react-material-sidebar
+# APS UI
 
-Basic React responsive sidebar starter template built on top of [Material UI](https://material-ui.com).
+To use the repo locally
+Install node, nvm
+Follow the following steps:
+>npm install
+>npm start
