@@ -22,6 +22,8 @@ import TablePagination from '@mui/material/TablePagination';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import html2pdf from 'html2pdf.js';
+
 
 const handleExportInvoice = (row) => {
   // Remove the selected GC number from the list
@@ -30,61 +32,102 @@ generatePDFInvoice(row)
 };
 
 const generatePDFInvoice = (rowData) => {
-  const doc = new jsPDF();
+  // Extracted the creation of table rows into a function for better readability
+  const createTableRows = () => {
+    // Iterate over the rowData list and generate table rows dynamically
+    return rowData.history.map((item) => `
+      <tr>
+        <td>${item.customerId}</td>
+        <td>dummy</td>
+        <td>${item.date}</td>
+        <td>${item.amount}</td>
+      </tr>
+    `).join('');
+  };
 
+  const htmlContent = `
+    <html>
+      <head>
+        <!-- Head section remains the same -->
+      </head>
+      <body>
+        <div style="text-align: center;">
+        <div style="text-align: center;">
+        <!-- Company Logo -->
+        <img src="/Users/Z0044H2/Documents/UI/GangaPhotography/assets/img/fireworks.jpeg" alt="Company Logo" width="100">
+        <!-- Company Name -->
+       <h1>Aadhithiya Parcel Service</h1>
+    
+        <!-- Company Address and Phone Number -->
+        <p>Company Address</p>
+        <p>Phone Number: XXX-XXX-XXXX</p>
 
-  const imagePath = '/Users/Z0044H2/Documents/UI/GangaPhotography/assets/img/trucking-service.jpg';
+      </div>
+        </div>
 
-  // Add image directly to the PDF
-  doc.addImage(imagePath, 'JPEG', 20, 10, 40, 40);
+        <div>
+          <h2>Billed To:</h2>
+          <p>Name: ${rowData.name}</p>
+          <p>Address: Hosur</p>
+          <p>Unique ID: ${rowData.id}</p>
+          <p>Invoice Date: 18/04/2023</p>
+        </div>
 
-  doc.setTextColor(200, 200, 200);
-  doc.setFontSize(30);
-  doc.textWithLink('Aadhithiya Parcel ', 50, 60, { url: "https://www.google.com/imgres?imgurl=https%3A%2F%2Fplay-lh.googleusercontent.com%2F-91f5NAgH-j_dooXWtPC6G5i0th2-9YPbtpVbZp1Vvsq4zgiqIIcG7VJmm5hyIoPdg_1&tbnid=E0NWeZWOpfl0TM&vet=12ahUKEwij78-a7eiDAxVkpmMGHT4kAmIQMygBegQIARB1..i&imgrefurl=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.bravuratech.APSMeetings%26hl%3Den_US&docid=_XSygsOp8Sx8cM&w=512&h=512&q=aps&ved=2ahUKEwij78-a7eiDAxVkpmMGHT4kAmIQMygBegQIARB1" });
+        <!-- Updated table structure with dynamic rows -->
+        <table border="1" style="width: 100%;">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${createTableRows()}
+          </tbody>
+        </table>
 
+        <div>
+        <h3>Total: $150</h3>
+      </div>
+    
+      <!-- Signature Section -->
+      <div>
+        <hr>
+        <p>Authorized Signature</p>
+      </div>
+      </body>
+    </html>
+  `;
 
-  // Add company details
-  doc.setTextColor(0, 0, 0);
-  doc.setFontSize(12);
-  doc.text('Aadhithiya Parcel Service', 70, 20);
-  doc.text('Company Address', 70, 30);
-  doc.text('Phone Number: XXX-XXX-XXXX', 70, 40);
+  // Create a temporary element to hold the HTML content
+  const tempElement = document.createElement('div');
+  tempElement.innerHTML = htmlContent;
 
-  // Add billed person details
-  doc.text(`Billed To: ${rowData.name}`, 20, 70);
-  doc.text(`Address: ${rowData.address}`, 20, 80);
-  doc.text(`Unique ID: ${rowData.uniqueId}`, 20, 90);
+  // Define options for html2pdf (unchanged)
+  const options = {
+    filename: 'invoice.pdf',
+    margin: 0.3,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: {
+      unit: 'in',
+      format: 'letter',
+      orientation: 'portrait',
+    },
+  };
 
-  // Add invoice details
-  doc.text(`Invoice Date: ${rowData.invoiceDate}`, 20, 110);
-
-  // Add table of invoice data
-  const columns = ['Item', 'Description', 'Amount', 'Total'];
-  const rows = [
-    ['Item 1', 'Description 1', '10', '100'],
-    ['Item 2', 'Description 2', '5', '50'],
-    ['Item 1', 'Description 1', '10', '100'],
-    // Add more rows as needed
-  ];
-
-  doc.autoTable({
-    head: [columns],
-    body: rows,
-    startY: 120,
-    theme: 'grid',
-  });
-
-  
-  // Add total value section
-  doc.text('Total: 4150', 20, doc.autoTable.previous.finalY + 10);
-
-  // Add signature line
-  doc.line(20, doc.autoTable.previous.finalY + 20, 180, doc.autoTable.previous.finalY + 20);
-  doc.text('Authorized Signature', 20, doc.autoTable.previous.finalY + 30);
-
-  // Save the PDF
-  doc.save('invoice.pdf');
+  // Convert HTML to PDF with options
+  html2pdf(tempElement, options)
+    .then(() => {
+      console.log('PDF generated successfully!');
+    })
+    .catch((error) => {
+      console.error('Error generating PDF:', error);
+    });
 };
+
 
 function createData(id, name, calories, fat, carbs, protein, price) {
   return {
